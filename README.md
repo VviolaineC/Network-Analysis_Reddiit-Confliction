@@ -65,6 +65,9 @@ Conclusion: A few “hub - type” communities dominate link propagation.
 * Example: r/SubredditDrama serves as a **conflict hub**, connecting otherwise unrelated communities
 * Think of them as **the gossip broadcasters**, making sure everyone hears about the drama
 
+See:https://github.com/VviolaineC/Network-Analysis_Reddiit-Confliction/blob/445c74b22a0bce7389e6b0b43d646150b134acb4/conflict_analysis.py
+
+
 ### 🛠️ Moderation Strategies to Reduce Inter-Subreddit Conflict
 
 **1️⃣ Monitor Bridge Hubs**
