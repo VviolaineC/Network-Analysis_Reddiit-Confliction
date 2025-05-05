@@ -7,3 +7,6 @@
 3. Intervention Strategies
 4. Conclusion
 5. Introduction
+
+### Background:
+Think: What happens when two Reddit communities go to war online? 
