@@ -10,3 +10,4 @@
 
 ### Background:
 Think: What happens when two Reddit communities go to war online? 
+![ChatGPT Image 2025年5月5日 15_03_00](https://github.com/user-attachments/assets/babcab70-9b6c-49cd-8d89-e60d18913b0d)
