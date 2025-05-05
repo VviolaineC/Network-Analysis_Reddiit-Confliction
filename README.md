@@ -27,7 +27,7 @@ Regard these links as direct signals of community conflicts
 
 ![656d7a13-1cfe-4484-9daf-03ef8900ed2a](https://github.com/user-attachments/assets/564b8271-25c2-4764-88bf-ca2238625294)
 
-See: process_reddit_data.py
+See: [process_reddit_data.py](https://github.com/VviolaineC/Network-Analysis_Reddiit-Confliction/blob/655e14ed1eb8f2c3fa9f50feb68600f2ed800c90/process_reddit_data.py)
 
 ### Findings:
 
