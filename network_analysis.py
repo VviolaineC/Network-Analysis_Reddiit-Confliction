@@ -6,18 +6,18 @@ import seaborn as sns
 from collections import defaultdict
 
 def load_processed_data():
-    """加载处理好的数据"""
+    """Load processed data"""
     df = pd.read_csv('processed_reddit_data.csv')
-    # 确保时间戳列被正确解析
+    # Ensure timestamp column is correctly parsed
     df['TIMESTAMP'] = pd.to_datetime(df['TIMESTAMP'], errors='coerce')
     return df
 
 def create_subreddit_network(df):
-    """构建subreddit网络图"""
-    # 创建有向图
+    """Build subreddit network graph"""
+    # Create directed graph
     G = nx.DiGraph()
     
-    # 1. 首先统计每个subreddit的基本信息
+    # 1. First, collect basic information for each subreddit
     subreddit_stats = defaultdict(lambda: {
         'out_degree': 0,
         'in_degree': 0,
@@ -29,7 +29,7 @@ def create_subreddit_network(df):
         'target_count': 0
     })
     
-    # 2. 统计边的信息
+    # 2. Collect edge information
     edge_stats = defaultdict(lambda: {
         'weight': 0,
         'negative_count': 0,
@@ -37,23 +37,23 @@ def create_subreddit_network(df):
         'last_link_time': pd.Timestamp.min
     })
     
-    # 处理每一行数据
-    print("处理数据中...")
+    # Process each row of data
+    print("Processing data...")
     total_rows = len(df)
     for idx, row in df.iterrows():
         if idx % 100000 == 0:
-            print(f"已处理 {idx}/{total_rows} 行...")
+            print(f"Processed {idx}/{total_rows} rows...")
             
         source = row['SOURCE_SUBREDDIT']
         target = row['TARGET_SUBREDDIT']
         timestamp = row['TIMESTAMP']
         is_negative = row['POST_LABEL'] == -1
         
-        # 跳过无效的时间戳
+        # Skip invalid timestamps
         if pd.isna(timestamp):
             continue
         
-        # 更新节点统计信息
+        # Update node statistics
         for sub, role in [(source, 'source'), (target, 'target')]:
             subreddit_stats[sub]['total_posts'] += 1
             if role == 'source':
@@ -69,7 +69,7 @@ def create_subreddit_network(df):
             subreddit_stats[sub]['first_seen'] = min(subreddit_stats[sub]['first_seen'], timestamp)
             subreddit_stats[sub]['last_seen'] = max(subreddit_stats[sub]['last_seen'], timestamp)
         
-        # 更新边的统计信息
+        # Update edge statistics
         edge = (source, target)
         edge_stats[edge]['weight'] += 1
         if is_negative:
@@ -77,15 +77,15 @@ def create_subreddit_network(df):
         edge_stats[edge]['first_link_time'] = min(edge_stats[edge]['first_link_time'], timestamp)
         edge_stats[edge]['last_link_time'] = max(edge_stats[edge]['last_link_time'], timestamp)
     
-    print("构建网络...")
-    # 3. 添加节点和边到图中
+    print("Building network...")
+    # 3. Add nodes and edges to the graph
     for subreddit, stats in subreddit_stats.items():
-        # 计算节点的主要类型（source或target）
+        # Calculate primary type of node (source or target)
         primary_type = 'source' if stats['source_count'] > stats['target_count'] else 'target'
-        # 计算负面帖子比例
+        # Calculate negative post ratio
         neg_ratio = stats['negative_posts'] / stats['total_posts'] if stats['total_posts'] > 0 else 0
         
-        # 将时间戳转换为字符串格式
+        # Convert timestamps to string format
         first_seen_str = stats['first_seen'].strftime('%Y-%m-%d %H:%M:%S') if stats['first_seen'] != pd.Timestamp.max else ''
         last_seen_str = stats['last_seen'].strftime('%Y-%m-%d %H:%M:%S') if stats['last_seen'] != pd.Timestamp.min else ''
         
@@ -93,72 +93,72 @@ def create_subreddit_network(df):
                   out_degree=stats['out_degree'],
                   in_degree=stats['in_degree'],
                   total_posts=stats['total_posts'],
-                  negative_ratio=float(neg_ratio),  # 确保是原生Python类型
+                  negative_ratio=float(neg_ratio),  # Ensure native Python type
                   primary_type=primary_type,
                   first_seen=first_seen_str,
                   last_seen=last_seen_str)
     
-    # 添加边
+    # Add edges
     for (source, target), stats in edge_stats.items():
-        # 将时间戳转换为字符串格式
+        # Convert timestamps to string format
         first_link_str = stats['first_link_time'].strftime('%Y-%m-%d %H:%M:%S') if stats['first_link_time'] != pd.Timestamp.max else ''
         last_link_str = stats['last_link_time'].strftime('%Y-%m-%d %H:%M:%S') if stats['last_link_time'] != pd.Timestamp.min else ''
         
         G.add_edge(source, target,
                   weight=stats['weight'],
-                  neg_label_ratio=float(stats['negative_count'] / stats['weight']),  # 确保是原生Python类型
+                  neg_label_ratio=float(stats['negative_count'] / stats['weight']),  # Ensure native Python type
                   first_link_time=first_link_str,
                   last_link_time=last_link_str)
     
     return G
 
 def analyze_network(G):
-    """分析网络的基本特征"""
-    print("\n=== 网络基本信息 ===")
-    print(f"节点数量: {G.number_of_nodes()}")
-    print(f"边的数量: {G.number_of_edges()}")
+    """Analyze basic network characteristics"""
+    print("\n=== Basic Network Information ===")
+    print(f"Number of nodes: {G.number_of_nodes()}")
+    print(f"Number of edges: {G.number_of_edges()}")
     
-    # 计算基本网络指标
-    print("\n=== 网络统计 ===")
+    # Calculate basic network metrics
+    print("\n=== Network Statistics ===")
     density = nx.density(G)
-    print(f"网络密度: {density:.6f}")
+    print(f"Network density: {density:.6f}")
     
-    # 度分布统计
+    # Degree distribution statistics
     in_degrees = [d for n, d in G.in_degree()]
     out_degrees = [d for n, d in G.out_degree()]
     
-    print("\n=== 度分布统计 ===")
-    print("入度统计:")
-    print(f"  最小值: {min(in_degrees)}")
-    print(f"  最大值: {max(in_degrees)}")
-    print(f"  平均值: {sum(in_degrees)/len(in_degrees):.2f}")
+    print("\n=== Degree Distribution Statistics ===")
+    print("In-degree statistics:")
+    print(f"  Minimum: {min(in_degrees)}")
+    print(f"  Maximum: {max(in_degrees)}")
+    print(f"  Average: {sum(in_degrees)/len(in_degrees):.2f}")
     
-    print("\n出度统计:")
-    print(f"  最小值: {min(out_degrees)}")
-    print(f"  最大值: {max(out_degrees)}")
-    print(f"  平均值: {sum(out_degrees)/len(out_degrees):.2f}")
+    print("\nOut-degree statistics:")
+    print(f"  Minimum: {min(out_degrees)}")
+    print(f"  Maximum: {max(out_degrees)}")
+    print(f"  Average: {sum(out_degrees)/len(out_degrees):.2f}")
     
-    # 边权重统计
+    # Edge weight statistics
     weights = [d['weight'] for (u, v, d) in G.edges(data=True)]
-    print("\n=== 边权重统计 ===")
-    print(f"最小权重: {min(weights)}")
-    print(f"最大权重: {max(weights)}")
-    print(f"平均权重: {sum(weights)/len(weights):.2f}")
+    print("\n=== Edge Weight Statistics ===")
+    print(f"Minimum weight: {min(weights)}")
+    print(f"Maximum weight: {max(weights)}")
+    print(f"Average weight: {sum(weights)/len(weights):.2f}")
     
-    # 找出最活跃的社区
-    print("\n=== 最活跃的社区（基于总度数）===")
+    # Find most active communities
+    print("\n=== Most Active Communities (Based on Total Degree) ===")
     total_degrees = {node: G.in_degree(node) + G.out_degree(node) 
                     for node in G.nodes()}
     top_communities = sorted(total_degrees.items(), key=lambda x: x[1], reverse=True)[:10]
     for comm, degree in top_communities:
         print(f"{comm}: {degree}")
     
-    # 计算并显示最具争议性的社区（负面比例最高的）
-    print("\n=== 最具争议性的社区（基于负面比例）===")
+    # Calculate and display most controversial communities (highest negative ratio)
+    print("\n=== Most Controversial Communities (Based on Negative Ratio) ===")
     controversial_communities = sorted(
         [(node, data['negative_ratio']) 
          for node, data in G.nodes(data=True)
-         if data['total_posts'] >= 10],  # 只考虑有至少10个帖子的社区
+         if data['total_posts'] >= 10],  # Only consider communities with at least 10 posts
         key=lambda x: x[1],
         reverse=True
     )[:10]
@@ -166,26 +166,26 @@ def analyze_network(G):
         print(f"{comm}: {ratio:.2%}")
 
 def main():
-    # 加载数据
-    print("加载数据...")
+    # Load data
+    print("Loading data...")
     df = load_processed_data()
     
-    # 构建网络
-    print("构建网络...")
+    # Build network
+    print("Building network...")
     G = create_subreddit_network(df)
     
-    # 分析网络
-    print("分析网络...")
+    # Analyze network
+    print("Analyzing network...")
     analyze_network(G)
     
-    # 保存网络数据（可以用于Gephi等工具进行可视化）
-    print("\n保存网络数据...")
+    # Save network data (can be used for visualization in tools like Gephi)
+    print("\nSaving network data...")
     nx.write_gexf(G, "reddit_network.gexf")
-    print("网络数据已保存为 'reddit_network.gexf'")
+    print("Network data saved as 'reddit_network.gexf'")
     
-    # 同时保存为GraphML格式（作为备份）
+    # Also save in GraphML format (as backup)
     nx.write_graphml(G, "reddit_network.graphml")
-    print("网络数据也保存为 'reddit_network.graphml'")
+    print("Network data also saved as 'reddit_network.graphml'")
 
 if __name__ == "__main__":
     main() 
