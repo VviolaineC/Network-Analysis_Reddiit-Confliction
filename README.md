@@ -65,4 +65,28 @@ Conclusion: A few “hub - type” communities dominate link propagation.
 * Example: r/SubredditDrama serves as a **conflict hub**, connecting otherwise unrelated communities
 * Think of them as **the gossip broadcasters**, making sure everyone hears about the drama
 
+### 🛠️ Moderation Strategies to Reduce Inter-Subreddit Conflict
+
+**1️⃣ Monitor Bridge Hubs**
+Closely track bridge communities (e.g., r/SubredditDrama) that connect many subreddits
+
+Throttle or flag hubs if they trigger a sudden surge of hostile cross-posts
+
+Prevent local drama from turning into platform-wide conflict
+
+**2️⃣ Rein in Aggressors**
+Identify instigator subreddits with unusually high rates of outbound negativity
+
+Use automated systems to flag toxic patterns
+
+Reduce their visibility and reach, and prompt moderation action
+
+**3️⃣ Protect Bystanders**
+Adjust algorithms so controversial posts don’t flood large general-interest subs (e.g., r/AskReddit)
+
+Encourage big communities to adopt “no external drama” rules
+
+Create a buffer to stop toxic content from going viral
+
+
 
