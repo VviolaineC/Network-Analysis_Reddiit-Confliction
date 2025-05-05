@@ -4,24 +4,24 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# 定义列名
+# Define column names
 columns = [
     'SOURCE_SUBREDDIT', 'TARGET_SUBREDDIT', 'POST_ID', 'TIMESTAMP', 
     'POST_LABEL', 'POST_PROPERTIES'
 ]
 
-# 加载数据
+# Load data
 def load_data(file_path):
     df = pd.read_csv(file_path, sep='\t', names=columns, low_memory=False)
     return df
 
-# 处理POST_PROPERTIES列
+# Process POST_PROPERTIES column
 def process_post_properties(df):
-    # 将POST_PROPERTIES拆分为单独的列
+    # Split POST_PROPERTIES into separate columns
     properties = df['POST_PROPERTIES'].str.split(',', expand=True)
     properties = properties.apply(pd.to_numeric, errors='coerce')
     
-    # 为每个属性创建有意义的列名
+    # Create meaningful column names for each property
     property_names = [
         'num_chars', 'num_chars_no_space', 'frac_alpha', 'frac_digits',
         'frac_uppercase', 'frac_whitespace', 'frac_special', 'num_words',
@@ -32,7 +32,7 @@ def process_post_properties(df):
         'sentiment_positive', 'sentiment_negative', 'sentiment_compound'
     ]
     
-    # 添加LIWC特征名称
+    # Add LIWC feature names
     liwc_features = [
         'LIWC_Funct', 'LIWC_Pronoun', 'LIWC_Ppron', 'LIWC_I', 'LIWC_We',
         'LIWC_You', 'LIWC_SheHe', 'LIWC_They', 'LIWC_Ipron', 'LIWC_Article',
@@ -52,62 +52,62 @@ def process_post_properties(df):
     
     property_names.extend(liwc_features)
     
-    # 确保我们有足够的列名
+    # Ensure we have enough column names
     if len(property_names) != properties.shape[1]:
         print(f"Warning: Number of property names ({len(property_names)}) does not match number of columns ({properties.shape[1]})")
     
-    # 重命名列
+    # Rename columns
     properties.columns = property_names[:properties.shape[1]]
     
-    # 合并回原始数据框
+    # Merge back with original dataframe
     df = pd.concat([df.drop('POST_PROPERTIES', axis=1), properties], axis=1)
     
     return df
 
-# 基本数据分析
+# Basic data analysis
 def analyze_data(df, source_name):
-    print(f"\n分析 {source_name} 数据集:")
-    print(f"总行数: {len(df)}")
-    print(f"子版块数量: {df['SOURCE_SUBREDDIT'].nunique()}")
-    print(f"目标子版块数量: {df['TARGET_SUBREDDIT'].nunique()}")
+    print(f"\nAnalyzing {source_name} dataset:")
+    print(f"Total rows: {len(df)}")
+    print(f"Number of subreddits: {df['SOURCE_SUBREDDIT'].nunique()}")
+    print(f"Number of target subreddits: {df['TARGET_SUBREDDIT'].nunique()}")
     
-    # 清理标签数据
+    # Clean label data
     df['POST_LABEL'] = pd.to_numeric(df['POST_LABEL'], errors='coerce')
     df = df.dropna(subset=['POST_LABEL'])
     df['POST_LABEL'] = df['POST_LABEL'].astype(int)
     
-    print("\n标签分布:")
+    print("\nLabel distribution:")
     print(df['POST_LABEL'].value_counts())
     
-    # 时间范围
+    # Time range
     df['TIMESTAMP'] = pd.to_datetime(df['TIMESTAMP'], errors='coerce')
     df = df.dropna(subset=['TIMESTAMP'])
-    print(f"\n时间范围: {df['TIMESTAMP'].min()} 到 {df['TIMESTAMP'].max()}")
+    print(f"\nTime range: {df['TIMESTAMP'].min()} to {df['TIMESTAMP'].max()}")
 
 def main():
-    # 加载数据
+    # Load data
     body_df = load_data("soc-redditHyperlinks-body.tsv")
     title_df = load_data("soc-redditHyperlinks-title.tsv")
     
-    # 处理数据
+    # Process data
     body_df = process_post_properties(body_df)
     title_df = process_post_properties(title_df)
     
-    # 添加数据源标识
+    # Add data source identifier
     body_df['SOURCE_TYPE'] = 'body'
     title_df['SOURCE_TYPE'] = 'title'
     
-    # 合并数据集
+    # Merge datasets
     combined_df = pd.concat([body_df, title_df], ignore_index=True)
     
-    # 分析数据
+    # Analyze data
     analyze_data(body_df, "Body")
     analyze_data(title_df, "Title")
     analyze_data(combined_df, "Combined")
     
-    # 保存处理后的数据
+    # Save processed data
     combined_df.to_csv('processed_reddit_data.csv', index=False)
-    print("\n处理后的数据已保存到 'processed_reddit_data.csv'")
+    print("\nProcessed data saved to 'processed_reddit_data.csv'")
 
 if __name__ == "__main__":
     main() 
