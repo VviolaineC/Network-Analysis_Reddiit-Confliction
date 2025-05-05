@@ -43,3 +43,26 @@ A few “supernodes” are highly active:
 
 Conclusion: A few “hub - type” communities dominate link propagation.
 
+
+
+### ⚔️ The Three Roles in Reddit Conflict: Who Starts It, Who Gets Hit, Who Spreads It
+
+**🧨 Conflict Instigators**
+
+* Actively initiate a large number of negative cross-links
+* Examples: r/ShitGnomeSays, r/imablue (over 90% of outbound links are hostile)
+* Think of them as **aggressive niche communities**—small in size, but highly provocative
+
+**🥺 Conflict Targets**
+
+* Frequently attacked by others, rarely strike back
+* Example: r/sjwnews receives many negative inbound links but sends few outbound links
+* These are **the quiet victims** in Reddit’s inter-community conflicts
+
+**🌉 Bridge Communities**
+
+* Don’t start conflicts, but **amplify and spread them** through exposure
+* Example: r/SubredditDrama serves as a **conflict hub**, connecting otherwise unrelated communities
+* Think of them as **the gossip broadcasters**, making sure everyone hears about the drama
+
+
