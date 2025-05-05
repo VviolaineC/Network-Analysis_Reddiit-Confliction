@@ -27,8 +27,11 @@ Regard these links as direct signals of community conflicts
 
 ![656d7a13-1cfe-4484-9daf-03ef8900ed2a](https://github.com/user-attachments/assets/564b8271-25c2-4764-88bf-ca2238625294)
 
+See: xxx document
 
-### 📊 Structural Characteristics of the Reddit Community Network
+### Findings:
+
+#### 📊 Structural Characteristics of the Reddit Community Network
 Interactions between communities are highly unbalanced (with obvious power - law distribution characteristics).
 On average, each subreddit links to only about 5 other communities.
 A few “supernodes” are highly active:
