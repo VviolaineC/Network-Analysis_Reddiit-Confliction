@@ -33,9 +33,13 @@ See: xxx document
 
 #### 📊 Structural Characteristics of the Reddit Community Network
 Interactions between communities are highly unbalanced (with obvious power - law distribution characteristics).
+
 On average, each subreddit links to only about 5 other communities.
 A few “supernodes” are highly active:
+
 🔗 r/AskReddit: Receives links from 5,000+ communities (the largest inbound node).
+
 🔗 r/SubredditDrama: Links to 3,000+ other communities (the largest outbound node).
+
 Conclusion: A few “hub - type” communities dominate link propagation.
 
