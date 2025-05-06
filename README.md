@@ -2,11 +2,12 @@
 ![4f7a6dbd-ea1c-4f22-85de-a550afaa02b2](https://github.com/user-attachments/assets/ba8a82e0-5047-49c8-b564-8a00ec62726b)
 
 ### Basic Content:
-1. Research Method
-2. Findings
-3. Intervention Strategies
-4. Conclusion
-5. Introduction
+1. Background
+2. Research Method
+3. Findings
+4. Intervention Strategies
+5. Conclusion
+
 
 ### Background:
 Think: What happens when two Reddit communities go to war online? 
