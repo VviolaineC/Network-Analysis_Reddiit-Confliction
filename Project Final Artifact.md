@@ -9,9 +9,13 @@ We utilize the Reddit Hyperlink Network dataset (2005–2017), which comprises o
 To prepare the data for analysis, several preprocessing steps were performed:
 
 •	Data Cleaning: Parsed and cleaned all timestamps, and standardized subreddit names to ensure consistency.
+
 •	Feature Processing: Split the post feature vector into individual components and normalized all sentiment-related metrics (including those based on LIWC).
+
 •	Link Aggregation: Aggregated the data by subreddit pairs, counting the total number of links from each source subreddit to each target subreddit, as well as the number of negative vs. positive links for each pair.
+
 •	Network Construction: Constructed a directed, weighted network of subreddits, where nodes represent subreddits and a directed edge from subreddit A to subreddit B indicates that A has posts linking to B. Each edge’s weight is the number of hyperlinks from A to B, and we calculate the proportion of those links that are negative in sentiment (the negative link ratio) as an edge attribute.
+
 •	Conflict Subnetwork Extraction: Extracted a “conflict subnetwork” consisting of only the edges with high negative link ratios. This subnetwork highlights the strongest channels of hostile interactions between communities, allowing us to examine how conflict propagates through the network.
 
 ## Results
